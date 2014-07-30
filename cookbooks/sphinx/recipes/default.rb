@@ -4,7 +4,7 @@
 #
 
 # Set your application name here
-appname = "myapp"
+appname = "ccube"
 
 # Uncomment the flavor of sphinx you want to use
 flavor = "thinking_sphinx"
@@ -27,7 +27,7 @@ utility_name = nil
 # If you don't want scheduled reindexes, just leave this set to nil.
 # Setting it equal to 10 would run the cron job every 10 minutes.
 
-cron_interval = nil #If this is not set your data will NOT be indexed
+cron_interval = 20 #If this is not set your data will NOT be indexed
 
 
 if ! File.exists?("/data/#{appname}/current")
