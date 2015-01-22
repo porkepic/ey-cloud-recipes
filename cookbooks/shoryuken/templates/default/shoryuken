@@ -12,15 +12,6 @@ if [[ "$(whoami)" != "root" ]]; then
   exit 1
 fi
 
-signal_worker() {
-  result=0
-  set_pid_from_file
-  (( pid )) || return 0
-  logger -t "monit-shoryuken[$$]" "Issuing kill with -$signal $pid"
-  sleep_count=0
-  kill -$signal $pid
-}
-
 # arguments 
 app_name=$1 action=$2 rails_env=$3 worker_id=$4
 
@@ -39,6 +30,22 @@ export HOME="/home/${app_user}"
 
 # change to current directory
 cd "${app_root}"
+
+signal_worker() {
+  result=0
+  set_pid_from_file
+  (( pid )) || return 0
+  logger -t "monit-shoryuken[$$]" "Issuing kill with -$signal $pid"
+  sleep_count=0
+  kill -$signal $pid
+}
+
+set_pid_from_file() {
+  if [[ -s "${pid_file}" ]]
+  then pid=$(cat $pid_file)
+  else pid=0
+  fi
+}
 
 # script usage
 usage ()
