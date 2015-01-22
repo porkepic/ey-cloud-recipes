@@ -1,0 +1,8 @@
+<% (@num_workers || 1).times do |num| %>
+check process resque_<%= @app_name %>_<%= num %>
+  with pidfile /var/run/engineyard/shoryuken/<%= @app_name %>/shoryuken_<%= num %>.pid
+  start program = "/engineyard/bin/shoryuken <%= @app_name %> start <%= @rails_env %> shoryuken_<%= num %>.conf" with timeout 90 seconds
+  stop program = "/engineyard/bin/shoryuken <%= @app_name %> stop <%= @rails_env %> shoryuken_<%= num %>.conf" with timeout 90 seconds
+  if totalmem is greater than 300 MB for 2 cycles then restart # eating up memory?
+  group <%= @app_name %>_shoryuken
+<% end %>
