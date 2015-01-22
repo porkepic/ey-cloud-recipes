@@ -4,14 +4,16 @@
 #  }
 #end
 
+include_recipe "shoryuken"
+
 # WHenever recipe from https://gist.github.com/vedanova/5352511
-include_recipe "whenever"
+# include_recipe "whenever"
 
 # uncomment to deny access to /log, /config, and .git directories as well as any .yml files
 # include_recipe "deny-directories"
 
 # uncomment to turn on thinking sphinx 2/ultra sphinx. Remember to edit cookbooks/sphinx/recipes/default.rb first!
-include_recipe "sphinx"
+# include_recipe "sphinx"
 
 # uncomment to turn on thinking sphinx 3. See cookbooks/thinking-sphinx-3/readme.md for documentation.
 # include_recipe "thinking-sphinx-3"
