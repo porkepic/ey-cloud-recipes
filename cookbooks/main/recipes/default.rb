@@ -4,6 +4,8 @@
 #  }
 #end
 
+include_recipe "nginx-multiapp-ssl"
+
 include_recipe "shoryuken"
 
 # WHenever recipe from https://gist.github.com/vedanova/5352511

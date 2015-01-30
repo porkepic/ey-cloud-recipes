@@ -1,0 +1,65 @@
+server {
+
+  listen 443;
+
+  server_name <%=vhost%>;
+
+  # SSL Certificates
+  #
+  # If you need to customize SSL please refer to
+  # /etc/nginx/servers/<%=app%>/customer.ssl_cert and customer.ssl_cipher
+
+  include /etc/nginx/servers/<%=app%>/ssl_cert;
+  include /etc/nginx/servers/<%=app%>/ssl_cipher;
+
+  client_max_body_size 100M;
+
+  root /data/<%=app%>/current/public;
+
+  access_log /var/log/engineyard/nginx/<%=app%>.ssl.access.log main;
+  error_log /var/log/engineyard/nginx/<%=app%>.ssl.error.log notice;
+
+  location ~ ^/(images|assets|javascripts|stylesheets)/ {
+    expires 10y;
+    try_files  $uri $uri/index.html /last_assets/$uri /last_assets/$uri.html @app_<%=app%>ssl;
+  }
+
+  error_page 404 /404.html;
+  error_page 500 502 504 /500.html;
+  error_page 503 @503;
+  recursive_error_pages on;
+  location @503 {
+
+    error_page 405 = /system/maintenance.html;
+
+    if (-f $request_filename) {
+      break;
+    }
+
+    rewrite ^(.*)$ /system/maintenance.html break;
+  }
+
+  location @app_<%=app%>ssl {
+
+    passenger_enabled on;
+
+    passenger_set_cgi_param HTTP_X_FORWARDED_FOR   $proxy_add_x_forwarded_for;
+    passenger_set_cgi_param HTTP_X_REAL_IP         $remote_addr;
+    passenger_set_cgi_param HTTP_HOST              $http_host;
+    passenger_set_cgi_param HTTP_X_FORWARDED_PROTO $scheme;
+    passenger_set_cgi_param HTTP_X_REQUEST_START   't=$start_time';
+    passenger_set_cgi_param HTTP_X_QUEUE_START     't=$start_time';
+
+    passenger_set_cgi_param SERVER_PORT            443;
+
+    rack_env production;
+
+    passenger_min_instances 2;
+  }
+
+  location / {
+  if (-f $document_root/system/maintenance.html) { return 503; }
+    try_files  $uri $uri/index.html $uri.html @app_<%=app%>ssl;
+  }
+include /etc/nginx/servers/<%=app%>/custom.ssl.conf;
+}
