@@ -23,6 +23,7 @@ pid_file="${pid_dir}/${worker_ref}.pid"
 log_file="${app_root}/log/${worker_ref}.log"
 conf_file="/data/${app_name}/current/config/shoryuken.yml"
 app_user=$(stat -L -c"%U" "${app_root}")
+pid=0
 
 shoryuken="${app_root}/ey_bundler_binstubs/shoryuken"
 
