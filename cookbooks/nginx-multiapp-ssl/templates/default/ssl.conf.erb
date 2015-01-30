@@ -2,26 +2,26 @@ server {
 
   listen 443;
 
-  server_name <%=vhost%>;
+  server_name <%=@vhost%>;
 
   # SSL Certificates
   #
   # If you need to customize SSL please refer to
-  # /etc/nginx/servers/<%=app%>/customer.ssl_cert and customer.ssl_cipher
+  # /etc/nginx/servers/<%=@app%>/customer.ssl_cert and customer.ssl_cipher
 
-  include /etc/nginx/servers/<%=app%>/ssl_cert;
-  include /etc/nginx/servers/<%=app%>/ssl_cipher;
+  include /etc/nginx/servers/<%=@app%>/ssl_cert;
+  include /etc/nginx/servers/<%=@app%>/ssl_cipher;
 
   client_max_body_size 100M;
 
-  root /data/<%=app%>/current/public;
+  root /data/<%=@app%>/current/public;
 
-  access_log /var/log/engineyard/nginx/<%=app%>.ssl.access.log main;
-  error_log /var/log/engineyard/nginx/<%=app%>.ssl.error.log notice;
+  access_log /var/log/engineyard/nginx/<%=@app%>.ssl.access.log main;
+  error_log /var/log/engineyard/nginx/<%=@app%>.ssl.error.log notice;
 
   location ~ ^/(images|assets|javascripts|stylesheets)/ {
     expires 10y;
-    try_files  $uri $uri/index.html /last_assets/$uri /last_assets/$uri.html @app_<%=app%>ssl;
+    try_files  $uri $uri/index.html /last_assets/$uri /last_assets/$uri.html @app_<%=@app%>ssl;
   }
 
   error_page 404 /404.html;
@@ -39,7 +39,7 @@ server {
     rewrite ^(.*)$ /system/maintenance.html break;
   }
 
-  location @app_<%=app%>ssl {
+  location @app_<%=@app%>ssl {
 
     passenger_enabled on;
 
@@ -59,7 +59,7 @@ server {
 
   location / {
   if (-f $document_root/system/maintenance.html) { return 503; }
-    try_files  $uri $uri/index.html $uri.html @app_<%=app%>ssl;
+    try_files  $uri $uri/index.html $uri.html @app_<%=@app%>ssl;
   }
-include /etc/nginx/servers/<%=app%>/custom.ssl.conf;
+include /etc/nginx/servers/<%=@app%>/custom.ssl.conf;
 }
