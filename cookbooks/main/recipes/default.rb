@@ -75,6 +75,9 @@ include_recipe "sphinx"
 #uncomment to run the redis recipe
 #include_recipe "redis"
 
+#uncomment to run the env-yaml recipe
+#include_recipe "env-yaml"
+
 #uncomment to run the api-keys-yml recipe
 # include_recipe "api-keys-yml"
 
@@ -100,6 +103,9 @@ include_recipe "sphinx"
 #uncomment to include the Elasticsearch recipe
 #include_recipe "elasticsearch"
 
+#uncomment to include the Elasticsearch recipe on solos and app masters
+#include_recipe "elasticsearch::non_util"
+
 # To install specific plugins to Elasticsearch see below as an example
 #es_plugin "cloud-aws" do
 #  action :install
@@ -116,6 +122,9 @@ include_recipe "sphinx"
 
 #uncomment to include the Magento recipe
 #include_recipe "magento"
+
+# uncomment to include the Postgres Maintenance recipe
+#include_recipe "postgresql_maintenance"
 
 #enable Extension modules for a given Postgresql database
 # if ['solo','db_master', 'db_slave'].include?(node[:instance_role])
@@ -139,28 +148,34 @@ include_recipe "sphinx"
   # postgresql9_pg_trgm "dbname"
   # postgresql9_pgcrypto "dbname"
   # postgresql9_pgrowlocks "dbname"
-  
-  # PostGis 1.5 (use with versions 9.0, 9.1, 9.2)
+
+  # PostGis 1.5 (use with versions 9.0, 9.1, 9.2 on 2009a/stable-v2)
   # postgresql9_postgis "dbname"
-  
-  # PostGis 2.0 (use with versions >= 9.2)
-  #postgresql9_postgis2 "dbname"
+
+  # PostGis 2.1 (use with version 9.2 on 2009a/stable-v2 and all versions on 12.11/stable-v4)
+  # postgresql9_postgis2 "dbname"
+
   # postgresql9_seg "dbname"
   # postgresql9_sslinfo "dbname"
   # postgresql9_tablefunc "dbname"
   # postgresql9_test_parser "dbname"
   # postgresql9_unaccent "dbname"
   # postgresql9_uuid_ossp "dbname"
-  
-  
+
+
   # 9.1 and 9.2 Extensions
   # postgresql9_file_fdw "dbname"
   # postgresql9_xml2 "dbname"
-  
-  #9.2 Extensions
+
+  # 9.2 Extensions
+  # Note: pg_stat_statements requires a server restart to complete installation
   # postgresql9_pg_stat_statements "dbname"
-  
+
   # Admin-Level Contribs
   # postgresql9_pg_buffercache "postgres"
   # postgresql9_pg_freespacemap "postgres"
 # end
+
+#uncomment to include the motd customization related to the environment
+#include_recipe "env_motd"
+
